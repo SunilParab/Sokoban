@@ -33,7 +33,9 @@ public class BlockBehavior : MonoBehaviour
     }
 
     public void MoveTo(int xMove, int yMove) {
-        GridManager.reference.Grid[x-1,y-1] = null;
+        if (GridManager.reference.Grid[x-1,y-1] == this.gameObject) {
+            GridManager.reference.Grid[x-1,y-1] = null;
+        }
         position.gridPosition = new Vector2Int(x+xMove,y+yMove);
         GridManager.reference.Grid[x+xMove-1,y+yMove-1] = this.gameObject;
 

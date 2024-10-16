@@ -9,18 +9,14 @@ public class Smooth : BlockBehavior
     public override bool CanMove(int xMove, int yMove) {
 
         if (moving) {
+            return true;
+        }
+
+        if (x + xMove < 1 || x + xMove > maxX) {
             return false;
         }
 
-        if (x + xMove < 1) {
-            return false;
-        } else if (x + xMove > maxX) {
-            return false;
-        }
-
-        if (y + yMove < 1) {
-            return false;
-        } else if (y + yMove > maxY) {
+        if (y + yMove < 1 || y + yMove > maxY) {
             return false;
         }
 

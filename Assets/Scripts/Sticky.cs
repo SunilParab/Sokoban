@@ -8,7 +8,7 @@ public class Sticky : BlockBehavior
     public override bool CanMove(int xMove, int yMove) {
 
         if (moving) {
-            return false;
+            return true;
         }
 
         if (x + xMove < 1) {
@@ -25,11 +25,13 @@ public class Sticky : BlockBehavior
 
         moving = true;
         if (GridManager.reference.Grid[x + xMove-1, y + yMove-1] == null) {
+            StickyGrab(xMove, yMove);
             MoveTo(xMove,yMove);
             moving = false;
             return true;
         } else {
             if (GridManager.reference.Grid[x + xMove-1, y + yMove-1].GetComponent<BlockBehavior>().CanMove(xMove,yMove)) {
+                StickyGrab(xMove, yMove);
                 MoveTo(xMove,yMove);
                 moving = false;
                 return true;
@@ -60,8 +62,7 @@ public class Sticky : BlockBehavior
 
 
         if (GridManager.reference.Grid[checkX-1,checkY-1] != null) { 
-            if (!GridManager.reference.Grid[checkX-1,checkY-1].CompareTag("Player") &&
-                GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().type.Equals("Sticky")) {
+            if (!GridManager.reference.Grid[checkX-1,checkY-1].CompareTag("Player")) {
                 GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().CanMove(xMove,yMove);
             }
         }
