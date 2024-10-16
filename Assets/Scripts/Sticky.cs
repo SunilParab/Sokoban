@@ -32,7 +32,6 @@ public class Sticky : BlockBehavior
             StickyGrab(xMove, yMove);
             MoveTo(xMove,yMove);
             moving = false;
-            moved = true;
             return true;
         } else {
             if (GridManager.reference.Grid[x + xMove-1, y + yMove-1].CompareTag("Player") ||

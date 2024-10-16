@@ -36,7 +36,6 @@ public class Smooth : BlockBehavior
                 StickyCheck(xMove, yMove);
                 MoveTo(xMove,yMove);
                 moving = false;
-                moved = true;
                 return true;
             } else {
                 moving = false;

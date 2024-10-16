@@ -39,7 +39,6 @@ public class Clingy : BlockBehavior
                 StickyCheck(xMove, yMove);
                 MoveTo(xMove,yMove);
                 moving = false;
-                moved = true;
                 return;
             } else {
                 moving = false;
