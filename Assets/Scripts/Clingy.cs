@@ -1,27 +1,30 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Smooth : BlockBehavior
+public class Clingy : BlockBehavior
 {
-
     public override bool CanMove(int xMove, int yMove) {
-
         if (moved) {
             return false;
         }
-
         if (moving) {
             return true;
         }
+        return false;
+    }
+
+    public void PullTo(int xMove, int yMove) {
+        if (moving || moved) {
+            return;
+        }
 
         if (x + xMove < 1 || x + xMove > maxX) {
-            return false;
+            return;
         }
 
         if (y + yMove < 1 || y + yMove > maxY) {
-            return false;
+            return;
         }
 
         moving = true;
@@ -29,7 +32,7 @@ public class Smooth : BlockBehavior
             StickyCheck(xMove, yMove);
             MoveTo(xMove,yMove);
             moving = false;
-            return true;
+            return;
         } else {
             if (GridManager.reference.Grid[x + xMove-1, y + yMove-1].CompareTag("Player") ||
                 GridManager.reference.Grid[x + xMove-1, y + yMove-1].GetComponent<BlockBehavior>().CanMove(xMove,yMove)) {
@@ -37,13 +40,12 @@ public class Smooth : BlockBehavior
                 MoveTo(xMove,yMove);
                 moving = false;
                 moved = true;
-                return true;
+                return;
             } else {
                 moving = false;
-                return false;
+                return;
             }
         }
-
     }
 
 }

@@ -16,6 +16,7 @@ public class BlockBehavior : MonoBehaviour
     public int maxY;
     //Lets other objects know this one is currently trying to move
     public bool moving;
+    public bool moved;
 
     // Start is called before the first frame update
     void Start()
@@ -28,11 +29,16 @@ public class BlockBehavior : MonoBehaviour
         maxY = GridManager.reference.Grid.GetLength(1);
     }
 
+    void LateUpdate() {
+        moved = false;
+    }
+
     public virtual bool CanMove(int xMove, int yMove) {
         return false;
     }
 
     public void MoveTo(int xMove, int yMove) {
+        moved = true;
         if (GridManager.reference.Grid[x-1,y-1] == this.gameObject) {
             GridManager.reference.Grid[x-1,y-1] = null;
         }
@@ -62,9 +68,12 @@ public class BlockBehavior : MonoBehaviour
 
 
         if (GridManager.reference.Grid[checkX-1,checkY-1] != null) { 
-            if (!GridManager.reference.Grid[checkX-1,checkY-1].CompareTag("Player") &&
-                GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().type.Equals("Sticky")) {
-                GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().CanMove(xMove,yMove);
+            if (!GridManager.reference.Grid[checkX-1,checkY-1].CompareTag("Player")) {
+                if (GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().type.Equals("Sticky")) {
+                    GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().CanMove(xMove,yMove);
+                } else if (GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().type.Equals("Clingy")) {
+                    GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<Clingy>().PullTo(xMove,yMove);
+                }
             }
         }
         

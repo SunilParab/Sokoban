@@ -7,6 +7,10 @@ public class Sticky : BlockBehavior
     
     public override bool CanMove(int xMove, int yMove) {
 
+        if (moved) {
+            return false;
+        }
+
         if (moving) {
             return true;
         }
@@ -28,9 +32,11 @@ public class Sticky : BlockBehavior
             StickyGrab(xMove, yMove);
             MoveTo(xMove,yMove);
             moving = false;
+            moved = true;
             return true;
         } else {
-            if (GridManager.reference.Grid[x + xMove-1, y + yMove-1].GetComponent<BlockBehavior>().CanMove(xMove,yMove)) {
+            if (GridManager.reference.Grid[x + xMove-1, y + yMove-1].CompareTag("Player") ||
+                GridManager.reference.Grid[x + xMove-1, y + yMove-1].GetComponent<BlockBehavior>().CanMove(xMove,yMove)) {
                 StickyGrab(xMove, yMove);
                 MoveTo(xMove,yMove);
                 moving = false;
@@ -63,7 +69,11 @@ public class Sticky : BlockBehavior
 
         if (GridManager.reference.Grid[checkX-1,checkY-1] != null) { 
             if (!GridManager.reference.Grid[checkX-1,checkY-1].CompareTag("Player")) {
-                GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().CanMove(xMove,yMove);
+                if (GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().type.Equals("Clingy")) {
+                    GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<Clingy>().PullTo(xMove,yMove);
+                } else {
+                    GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().CanMove(xMove,yMove);
+                }
             }
         }
         

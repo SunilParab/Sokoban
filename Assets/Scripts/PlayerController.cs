@@ -63,7 +63,10 @@ public class PlayerController : MonoBehaviour
         if (xChange != 0 || yChange != 0) {
             if (GridManager.reference.Grid[x + xChange-1,y + yChange-1] == null ||
                 GridManager.reference.Grid[x + xChange-1,y + yChange-1].GetComponent<BlockBehavior>().CanMove(xChange,yChange)) {
-                GridManager.reference.Grid[x-1,y-1] = null;
+                StickyCheck(xChange, yChange);
+                if (GridManager.reference.Grid[x-1,y-1] == this.gameObject) {
+                    GridManager.reference.Grid[x-1,y-1] = null;
+                }
                 position.gridPosition = new Vector2Int(x+xChange,y+yChange);
                 GridManager.reference.Grid[x+xChange-1,y+yChange-1] = this.gameObject;
                 x = position.gridPosition.x;
@@ -72,4 +75,35 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
+    public void StickyCheck(int xMove, int yMove) {
+        StickyCheckTile(x+1,y,xMove,yMove);
+        StickyCheckTile(x-1,y,xMove,yMove);
+        StickyCheckTile(x,y+1,xMove,yMove);
+        StickyCheckTile(x,y-1,xMove,yMove);
+    }
+
+    public void StickyCheckTile(int checkX, int checkY, int xMove, int yMove) {
+
+        if (checkX < 1 || checkX > maxX) {
+            return;
+        }
+
+        if (checkY < 1 || checkY > maxY) {
+            return;
+        }
+
+
+        if (GridManager.reference.Grid[checkX-1,checkY-1] != null) { 
+            if (!GridManager.reference.Grid[checkX-1,checkY-1].CompareTag("Player")) {
+                if (GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().type.Equals("Sticky")) {
+                    GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().CanMove(xMove,yMove);
+                } else if (GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().type.Equals("Clingy")) {
+                    GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<Clingy>().PullTo(xMove,yMove);
+                }
+            }
+        }
+        
+    }
+
 }
