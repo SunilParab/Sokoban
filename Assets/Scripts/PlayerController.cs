@@ -9,8 +9,8 @@ public class PlayerController : MonoBehaviour
     public string type = "Player";
     public int x = 1;
     public int y = 1;
-    public int maxX = 10;
-    public int maxY = 5;
+    public int maxX;
+    public int maxY;
 
     public GridObject position;
 
@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
         x = position.gridPosition.x;
         y = position.gridPosition.y;
         GridManager.reference.Grid[x-1,y-1] = this.gameObject;
+
+        maxX = GridManager.reference.Grid.GetLength(0);
+        maxY = GridManager.reference.Grid.GetLength(1);
     }
 
     // Update is called once per frame

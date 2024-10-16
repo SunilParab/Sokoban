@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BlockBehavior : MonoBehaviour
@@ -11,6 +12,10 @@ public class BlockBehavior : MonoBehaviour
 
     public int x;
     public int y;
+    public int maxX;
+    public int maxY;
+    //Lets other objects know this one is currently trying to move
+    public bool moving;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +23,9 @@ public class BlockBehavior : MonoBehaviour
         x = position.gridPosition.x;
         y = position.gridPosition.y;
         GridManager.reference.Grid[x-1,y-1] = this.gameObject;
+
+        maxX = GridManager.reference.Grid.GetLength(0);
+        maxY = GridManager.reference.Grid.GetLength(1);
     }
 
     public virtual bool CanMove(int xMove, int yMove) {
@@ -41,6 +49,16 @@ public class BlockBehavior : MonoBehaviour
     }
 
     public void StickyCheckTile(int checkX, int checkY, int xMove, int yMove) {
+
+        if (checkX < 1 || checkX > maxX) {
+            return;
+        }
+
+        if (checkY < 1 || checkY > maxY) {
+            return;
+        }
+
+
         if (GridManager.reference.Grid[checkX-1,checkY-1] != null) { 
             if (!GridManager.reference.Grid[checkX-1,checkY-1].CompareTag("Player") &&
                 GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().type.Equals("Sticky")) {
