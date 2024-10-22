@@ -77,6 +77,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void StickyCheck(int xMove, int yMove) {
+        ClingyCheck(xMove,yMove);
         StickyCheckTile(x+1,y,xMove,yMove);
         StickyCheckTile(x-1,y,xMove,yMove);
         StickyCheckTile(x,y+1,xMove,yMove);
@@ -98,12 +99,29 @@ public class PlayerController : MonoBehaviour
             if (!GridManager.reference.Grid[checkX-1,checkY-1].CompareTag("Player")) {
                 if (GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().type.Equals("Sticky")) {
                     GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().CanMove(xMove,yMove);
-                } else if (GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<BlockBehavior>().type.Equals("Clingy")) {
-                    GridManager.reference.Grid[checkX-1,checkY-1].GetComponent<Clingy>().PullTo(xMove,yMove);
                 }
             }
         }
         
+    }
+
+    public void ClingyCheck(int xMove, int yMove) {
+
+        if (x - xMove < 1 || x - xMove > maxX) {
+            return;
+        }
+
+        if (y - yMove < 1 || y - yMove > maxY) {
+            return;
+        }
+
+
+        if (GridManager.reference.Grid[x-xMove-1,y-yMove-1] != null) { 
+            if (!GridManager.reference.Grid[x-xMove-1,y-yMove-1].CompareTag("Player") &&
+                (GridManager.reference.Grid[x-xMove-1,y-yMove-1].GetComponent<BlockBehavior>().type.Equals("Clingy"))) {
+                    GridManager.reference.Grid[x-xMove-1,y-yMove-1].GetComponent<Clingy>().PullTo(xMove,yMove);
+            }
+        }
     }
 
 }
